@@ -1,7 +1,6 @@
 import game_framework
 import scroll_state
 
-from boy import FreeBoy as Boy # import Boy class from boy.py
 
 from pico2d import*
 
@@ -26,6 +25,7 @@ def handle_events():
 def draw():
     clear_canvas()
     image.draw(400,300)
+    penguin.draw(100,100)
     update_canvas()
     
 def update(): pass

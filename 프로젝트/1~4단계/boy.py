@@ -1,5 +1,5 @@
 import random
-import fight1_state
+
 from pico2d import *
 
 
@@ -20,7 +20,7 @@ class FreeBoy:
     LEFT_RUN, RIGHT_RUN, LEFT_STAND, RIGHT_STAND = 0, 1, 2, 3
 
     def __init__(self):
-        self.x, self.y = 50, 50
+        self.x, self.y = 50, 40
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.frame = random.randint(0, 7)
@@ -76,11 +76,12 @@ class FreeBoy:
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_LEFT: self.xdir += -1
             elif event.key == SDLK_RIGHT: self.xdir += 1
-
+            elif x==200 : game_framework.change_state(fight1_state)
           
         if event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT: self.xdir += 1
             elif event.key == SDLK_RIGHT: self.xdir += -1
+            
   
            
      

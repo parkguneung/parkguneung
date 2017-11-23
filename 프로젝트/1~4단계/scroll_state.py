@@ -2,7 +2,6 @@ from pico2d import *
 
 import game_framework
 import fight1_state
-import penguin
 
 from boy import FreeBoy as Boy # import Boy class from boy.py
 from background import FixedBackground as Background
@@ -57,7 +56,7 @@ def handle_events(frame_time):
         else:
                 boy.handle_event(event)
                 background.handle_event(event)
-
+               
 def update(frame_time):
     boy.update(frame_time)
     background.update(frame_time)
