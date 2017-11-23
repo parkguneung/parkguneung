@@ -1,0 +1,6 @@
+start_state = kpu_credit 로고
+
+title_state = 게임시작,게임방법,아이템상점 화면
+
+main_state = 렉사르이동,야수전투씬
+

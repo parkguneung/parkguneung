@@ -5,6 +5,7 @@ image=None
 
 def enter():
     global image
+    global spider
     image=load_image('밀림(배경맵).png')
 def exit():
     global image
@@ -17,8 +18,7 @@ def handle_events():
         else:
             if(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
-            elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                game_framework.change_state(main_state)
+
 def draw():
     clear_canvas()
     image.draw(400,300)
