@@ -3,37 +3,24 @@ import pygame
 import random
 from time import sleep
 WHITE = (255,255,255)
-pad_width=1024
 RED=(255,0,0)
+pad_width=1024
 pad_height=512
 background_width=1024
-hunter_width=90
-hunter_height=55
 rion_width=110
 rion_height=67
+hunter_width=90
+hunter_height=55
+#---------------
+fireball1_width =140
 
-fireball1_width=140
-fireball1_height=60
-fireball2_height=60
+fireball1_height =60
 fireball2_width=86
-#---------------------
-
-def drawScore(count):
-	global gamepad
-	font = pygame.font.SysFont(None,25)
-	text = font.render('놓친 사자수: ' +str(count),True,WHITE)
-	gamepad.blit(text,(0,0))
-
-	
-def gameOver():
-	global gamepad
-	dispMessage('GAME OVER')
-
-	
-#-------------------------
+fireball2_height=60
 def textObj(text,font):
-	textSurface=font.render(text,True,RED)
-	return textSurface,textSurface.get_rect()
+        textSurface=font.render(text,True,RED)
+        return textSurface,textSurface.get_rect()
+
 def dispMessage(text):
         global gamepad
         largeText=pygame.font.Font('Gajangjari.ttf',115)
@@ -41,36 +28,35 @@ def dispMessage(text):
         TextRect.center=((pad_width/2),(pad_height/2))
         gamepad.blit(TextSurf,TextRect)
         pygame.display.update()
-        sleep(2)
+        sleep(2)#2초쉬고 게임다시시작 
         runGame()
 
-	
+        
 def crash():
-	global gamepad
-	dispMessage('Crashed!')
+        global gamepad
+        dispMessage('Crashed!')
 
-	
 def drawObject(obj,x,y):
-	global gamepad
-	gamepad.blit(obj,(x,y))
-
-	
-
+        global gamepad
+        gamepad.blit(obj,(x,y))
 
 def runGame():
 	global gamepad,hunter,clock,background1,background2
 	global rion,fires,bullet,boom
-	isShotRion=False
+	#---------------
+	isShotRion = False
 	boom_count=0
-	rion_passed=0
 	bullet_xy=[]
 	x=pad_width*0.05
 	y=pad_width*0.8
 	y_change=0
+
 	background1_x=0
 	background2_x=background_width
+
 	rion_x=pad_width
 	rion_y=random.randrange(0,pad_height)
+
 	fire_x=pad_width
 	fire_y=random.randrange(0,pad_height)
 	random.shuffle(fires)
@@ -87,67 +73,59 @@ def runGame():
 					y_change = 5
 				elif event.key == pygame.K_LCTRL:
 					bullet_x=x+hunter_width
-					bullet_y=y+huter_height/2
+					bullet_y=y+hunter_height/2
 					bullet_xy.append([bullet_x,bullet_y])
-			if event.type == pygame.KEYUP:
-				if event.key == pygame.K_UP or event.key == pygame.K_DOWN:y_change =0
+				if event.type == pygame.KEYUP:
+					if event.key == pygame.K_UP or event.key == pygame.K_DOWN:y_change =0
 		gamepad.fill(WHITE)
-		#draw background
-		background1_x -=2
-		background2_x -=2
+		background1_x-=2
+		background2_x-=2
 		if background1_x == -background_width:
-			background1_x = background_width
+			background1_x=background_width
 		if background2_x == -background_width:
-			background2_x = background_width
+			background2_x=background_width
 		drawObject(background1,background1_x,0)
 		drawObject(background2,background2_x,0)
-		#score
-		drawScore(rion_passed)
-		#check rion pass
-		if rion_passed>2:
-			gameOver()
-		#hunter
+		#사냥꾼
 		y += y_change
 		if y<0:
 			y=0
 		elif y>pad_height-hunter_height:
 			y=pad_height-hunter_height
-		#rion
+		#사자
 		rion_x -=7
 		if rion_x<=0:
-			rion_passed += 1
-			rion_x=pad_width
-			rion_y=random.randrange(0,pad_height)
-		#fireball
-		if fire[1] == None:
+			rion_x = pad_width
+			rion_y = random.randrange(0,pad_height)
+		#적
+		if fire == None:
 			fire_x -=30
 		else:
 			fire_x -=15
-		if fire_x <= 0:
+		if fire_x <=0:
 			fire_x = pad_width
 			fire_y = random.randrange(0,pad_height)
 			random.shuffle(fires)
 			fire=fires[0]
-		#bullet
+		#총알
 		if len(bullet_xy)!=0:
-			for i,bxy in enumerate(bullte_xy):
-				bxy[0] +=15
+			for i,bxy in enumerate(bullet_xy):
+				bxy[0]+=15
 				bullet_xy[i][0]=bxy[0]
-				#bullet strike rion
 				if bxy[0]>rion_x:
-					if bxy[1]>rion_y and bxy[1]<rion_y+rion_height:
+					if bxy[1]>rion_y and bxy[1]<rion_y + rion_height:
 						bullet_xy.remove(bxy)
 						isShotRion=True
-					if bxy[0]>=pad_width:
-						try:
-							bullet_xy.remove(bxy)
-						except:
-							pass
-		#hunter crash rion
-		if x+hunter_width>rion_x:
+				if bxy[0]>=pad_width:
+					try:
+						bullet_xy.remove(bxy)
+					except:
+						pass
+		#사자충돌
+		if x+ hunter_width>rion_x:
 			if(y>rion_y and y<rion_y+rion_height)or(y+hunter_height>rion_y and y+hunter_height<rion_y+rion_height):
 				crash()
-		#hunter crash fireball
+		#불충돌
 		if fire[1] != None:
 			if fire[0] == 0:
 				fireball_width = fireball1_width
@@ -163,7 +141,7 @@ def runGame():
 			for bx,by in bullet_xy:
 				drawObject(bullet,bx,by)
 		if not isShotRion:
-			drawObject(rion,rion_x,rion,y)
+			drawObject(rion,rion_x,rion_y)
 		else:
 			drawObject(boom,rion_x,rion_y)
 			boom_count +=1
@@ -179,7 +157,6 @@ def runGame():
 	pygame.quit()
 	quit()
 
-	
 def initGame():
 	global gamepad,hunter,clock,background1,background2
 	global rion,fires,bullet,boom
@@ -193,17 +170,20 @@ def initGame():
 	background1=pygame.image.load('밀림.png')
 	background2=background1.copy()
 	rion=pygame.image.load('사자.png')
-	fires.append(pygame.image.load('fireball.png'))
-	fires.append(pygame.image.load('fireball2.png'))
+	fires.append((0,pygame.image.load('fireball.png')))
+	fires.append((1,pygame.image.load('fireball2.png')))
 	boom=pygame.image.load('boom.png')
 	for i in range(3):
 		fires.append((i+2,None))
-
 	bullet=pygame.image.load('bullet.png')
+
+
+	
+                     
 	clock=pygame.time.Clock()
 	runGame()
 
-	
+
 if __name__ == '__main__':
 	initGame()
 
